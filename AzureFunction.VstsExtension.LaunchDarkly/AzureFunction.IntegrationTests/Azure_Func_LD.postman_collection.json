@@ -1,0 +1,189 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Azure Functions LD",
+		"_postman_id": "45837028-ad74-9a74-9744-402359b4fec9",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1-Get VSTS Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"token\",jsonData.token);",
+							"",
+							"tests[\"1-Get VSTS Token - Status code is 200\"] = responseCode.code === 200;",
+							"",
+							"console.log(JSON.parse(responseBody));",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{vsts-urlToken}}",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic {{VSTSBasicAuthentification}}",
+						"description": ""
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json; charset=utf-8; api-version=4.0-preview.1",
+						"description": ""
+					},
+					{
+						"key": "Accept",
+						"value": "application/json;api-version=4.0-preview.1;excludeUrls=true",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{appId: \"{{vsts-appId}}\", name: null, token: null, tokenType: 1}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "2-CheckToken AzureFunction",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var expectedLDHashKey = data.expectedLDHashKey;",
+							"if(expectedLDHashKey === undefined){",
+							"    expectedLDHashKey = postman.getEnvironmentVariable(\"expectedLDHashKey\");",
+							"}",
+							"tests[\"2-CheckToken AzureFunction - Body matches string\"] = responseBody.has(expectedLDHashKey);",
+							"tests[\"2-CheckToken AzureFunction - Status code is 200\"] = responseCode.code === 200;",
+							"",
+							"",
+							"console.log(\"responseBody: \"+responseBody)",
+							"console.log(\"expectedLDHashKey: \"+expectedLDHashKey);",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{uriApi-GetHashKey}}",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "account={{vsts-account}}&token={{token}}"
+				},
+				"description": ""
+			},
+			"response": [
+				{
+					"id": "04f4c28e-7ecd-4df2-b3f2-f32a1cfbba87",
+					"name": "ex1",
+					"originalRequest": {
+						"url": "{{uriApi}}",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "account={{account}}&token={{token}}"
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "",
+					"_postman_previewtype": "parsed",
+					"header": [],
+					"cookie": [],
+					"responseTime": "0",
+					"body": "\"65945e676e29b3be97e7ffabcc32a851d8fe2423ada522194ff002e9cd419dd9\""
+				}
+			]
+		},
+		{
+			"name": "3-UpdateUserFeatureFlag AzureFunction",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"2-UpdateUserFF AzureFunction - Status code is 200\"] = responseCode.code === 200;",
+							"",
+							"console.log(JSON.parse(responseBody));"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{uriApi-UpdateUserFF}}",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "account={{vsts-account}}&token={{token}}&feature={{ldfeature}}&active=false&ldproject={{ldproject}}&ldenv={{ldenv}}"
+				},
+				"description": ""
+			},
+			"response": [
+				{
+					"id": "ba1646fd-b64c-4bd5-a795-e4c1e7f4f5b2",
+					"name": "ex1",
+					"originalRequest": {
+						"url": "{{uriApi}}",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "account={{account}}&token={{token}}"
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "",
+					"_postman_previewtype": "parsed",
+					"header": [],
+					"cookie": [],
+					"responseTime": "0",
+					"body": "\"65945e676e29b3be97e7ffabcc32a851d8fe2423ada522194ff002e9cd419dd9\""
+				}
+			]
+		}
+	]
+}

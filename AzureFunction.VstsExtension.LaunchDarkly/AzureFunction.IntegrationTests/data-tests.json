@@ -1,0 +1,14 @@
+[
+  {
+    "vsts-urlToken": "https://__INTTEST_VSTSACCOUNT_TOKEN__.visualstudio.com/_apis/WebPlatformAuth/SessionToken?api-version=1.0",
+    "vsts-appId": "__INTTEST_VSTSACCOUNT_APPID__",
+    "uriApi-GetHashKey": "__appServiceUrl__/api/GetHashKey",
+    "uriApi-UpdateUserFF": "__appServiceUrl__/api/UpdateUserFeatureFlag",
+    "vsts-account": "__INTTEST_VSTSACCOUNT_TOKEN__",
+    "ldproject": "__INTTEST_LD_PROJECT__",
+    "ldenv": "__INTTEST_LD_ENV__",
+    "ldfeature": "__INTTEST_LD_FEATURE__",
+    "expectedLDHashKey": "__INTTEST_ExpectedLDHashKey__",
+	"VSTSBasicAuthentification" :  "__INTTEST_VSTSBasicAuthentification__"
+  }
+]

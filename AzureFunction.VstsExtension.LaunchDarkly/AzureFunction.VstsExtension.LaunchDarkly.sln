@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.8
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "AzureFunction.ARMTemplates", "AzureFunction.ARMTemplates\AzureFunction.ARMTemplates.deployproj", "{5C0236E8-52B7-47B6-92E8-7F0793D2B349}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureFunction.VstsExtension.LaunchDarkly.UnitTests", "AzureFunction.VstsExtension.LaunchDarkly.UnitTests\AzureFunction.VstsExtension.LaunchDarkly.UnitTests.csproj", "{23998246-9A32-44B5-9997-9A599D174DD1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AzureFunction.IntegrationTests", "AzureFunction.IntegrationTests", "{EB6E1DD6-8EC5-436F-982A-E88D0FB1E389}"
+	ProjectSection(SolutionItems) = preProject
+		AzureFunction.IntegrationTests\Azure_Func_LD.postman_collection.json = AzureFunction.IntegrationTests\Azure_Func_LD.postman_collection.json
+		AzureFunction.IntegrationTests\data-tests.json = AzureFunction.IntegrationTests\data-tests.json
+		AzureFunction.IntegrationTests\package.json = AzureFunction.IntegrationTests\package.json
+		AzureFunction.IntegrationTests\postman_environment.json = AzureFunction.IntegrationTests\postman_environment.json
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureFunction.VstsExtension.LaunchDarkly", "AzureFunction.VstsExtension.LaunchDarkly\AzureFunction.VstsExtension.LaunchDarkly.csproj", "{BB487675-E7BB-4B36-84A0-B0FF5681FB72}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5C0236E8-52B7-47B6-92E8-7F0793D2B349}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C0236E8-52B7-47B6-92E8-7F0793D2B349}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23998246-9A32-44B5-9997-9A599D174DD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23998246-9A32-44B5-9997-9A599D174DD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23998246-9A32-44B5-9997-9A599D174DD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23998246-9A32-44B5-9997-9A599D174DD1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB487675-E7BB-4B36-84A0-B0FF5681FB72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB487675-E7BB-4B36-84A0-B0FF5681FB72}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB487675-E7BB-4B36-84A0-B0FF5681FB72}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB487675-E7BB-4B36-84A0-B0FF5681FB72}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7E6C750D-F1E5-4F03-B2B0-7FA6FD0ED2B3}
+	EndGlobalSection
+EndGlobal

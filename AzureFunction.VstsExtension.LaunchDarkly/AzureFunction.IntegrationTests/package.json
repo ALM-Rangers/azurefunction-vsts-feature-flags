@@ -1,0 +1,14 @@
+{
+  "name": "postman",
+  "version": "1.0.0",
+  "description": "postmanrestapi",
+  "main": "index.js",
+  "scripts": {
+    "testapi": "newman run Azure_Func_LD.postman_collection.json -e postman_environment.json -r junit,cli,html --reporter-html-export TestResult/result-tests.html --reporter-junit-export TestResult/result-tests.xml -d data-tests.json"
+  },
+  "devDependencies": {
+    "newman": "^3.7.6"
+  },
+  "author": "",
+  "license": "ISC"
+}
