@@ -8,4 +8,4 @@ Changes proposed in this pull request:
 - 
 - 
 
-@ALM-Rangers/Yeoman-extension-code-generator
+@ALM-Rangers/azurefunction-vsts-feature-flags
