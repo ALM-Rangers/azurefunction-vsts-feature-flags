@@ -1,4 +1,4 @@
-# azurefunction-vsts-feature-flags
+s# azurefunction-vsts-feature-flags
 
 ![](https://almrangers.visualstudio.com/_apis/public/build/definitions/7f3cfb9a-d1cb-4e66-9d36-1af87b906fe9/154/badge)
 
@@ -12,8 +12,8 @@ For more details, refer to these blog posts:
 - [Building VSTS Extensions with feature flags – Part 3](https://blogs.msdn.microsoft.com/visualstudioalmrangers/2017/08/10/building-vsts-extensions-with-feature-flags-part-3/)
 - [Azure Functions – Prepare for continuous delivery](https://blogs.msdn.microsoft.com/visualstudioalmrangers/2017/09/06/azure-functions-prepare-for-continuous-delivery/)
 - [Azure Functions – Azure Function – Integration tests automation](https://blogs.msdn.microsoft.com/visualstudioalmrangers/2017/09/24/azure-function-integration-tests-automation/)
-- [Azure Function – CI / CD DevOps Pipeline](https://blogs.msdn.microsoft.com/visualstudioalmrangers/2017/10/04/azure-function-ci-cd-devops-pipeline/)
-- [Azure Function – Integrating monitoring with Application Insights](https://blogs.msdn.microsoft.com/visualstudioalmrangers/2017/10/10/azure-function-integrating-monitoring-with-application-insights/)
+- [Azure Functions – CI / CD DevOps Pipeline](https://blogs.msdn.microsoft.com/visualstudioalmrangers/2017/10/04/azure-function-ci-cd-devops-pipeline/)
+- [Azure Functions – Integrating monitoring with Application Insights](https://blogs.msdn.microsoft.com/visualstudioalmrangers/2017/10/10/azure-function-integrating-monitoring-with-application-insights/)
 
 > We're using this sample to implement feature flags in our extensions. We're dogfooding and validating our research!
 
