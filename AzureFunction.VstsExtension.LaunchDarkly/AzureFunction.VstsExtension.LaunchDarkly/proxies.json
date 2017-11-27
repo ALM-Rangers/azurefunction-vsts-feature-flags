@@ -1,0 +1,16 @@
+﻿{
+  "proxies": {
+    "v1": {
+      "matchCondition": {
+        "route": "api/{*restOfPath}"
+      },
+      "backendUri": "https://%WEBSITE_HOSTNAME%/api/{restOfPath}"
+    },
+    "v2": {
+      "matchCondition": {
+        "route": "api/v2/{*restOfPath}"
+      },
+      "backendUri": "https://%WEBSITE_HOSTNAME%/api/{restOfPath}"
+    }
+  }
+}
