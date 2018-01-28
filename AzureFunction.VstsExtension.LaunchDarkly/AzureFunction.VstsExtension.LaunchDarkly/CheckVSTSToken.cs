@@ -8,11 +8,11 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
 {
     public class CheckVSTSToken
     {
-        public static string checkTokenValidity(string issuedToken, TraceWriter log)
+        public static string checkTokenValidity(string issuedToken, string nameExtensionCertificateKey)
         {
             try
             {
-                string secret = Helpers.GetEnvironmentVariable("RollUpBoard_ExtensionCertificate"); // Load your extension's secret
+                string secret = Helpers.GetEnvironmentVariable(nameExtensionCertificateKey); // Load your extension's secret
                 var validationParameters = new TokenValidationParameters()
                 {
                     IssuerSigningTokens = new List<BinarySecretSecurityToken>()
