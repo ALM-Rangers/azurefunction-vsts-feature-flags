@@ -7,6 +7,7 @@ using System;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
+using System.IdentityModel.Tokens;
 
 namespace AzureFunction.VstsExtension.LaunchDarkly
 {
@@ -23,25 +24,26 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
                 telemetry.Context.Operation.Id = context.InvocationId.ToString();
                 telemetry.Context.Operation.Name = "GetHashKey";
 
-                var data = req.Content.ReadAsStringAsync().Result; //Gettings parameters in Body request
 
-                #region display log for debug
-                log.Info(data); //for debug
-                #endregion
-
+                var data = req.Content.ReadAsStringAsync().Result; //Gettings parameters in Body request     
                 var formValues = data.Split('&')
                     .Select(value => value.Split('='))
                     .ToDictionary(pair => Uri.UnescapeDataString(pair[0]).Replace("+", " "),
                                   pair => Uri.UnescapeDataString(pair[1]).Replace("+", " "));
 
-                var issuedToken = formValues["token"];
+                #region display log for debug
+                log.Info(data); //for debug
+                #endregion
+
                 var account = formValues["account"];
+
+                string issuedToken = Helpers.GetUserTokenInRequest(req);
 
                 #region display log for debug
                 log.Info(issuedToken);
                 #endregion
 
-                var tokenuserId = CheckVSTSToken.checkTokenValidity(issuedToken, log); //Check the token, and compare with the VSTS UserId
+                var tokenuserId = CheckVSTSToken.checkTokenValidity(issuedToken, "RollUpBoard_ExtensionCertificate"); //Check the token, and compare with the VSTS UserId
                 if (tokenuserId != null)
                 {
                     string hash = LaunchDarklyServices.GetHashKey(tokenuserId + ":" + account); //hash the User Key
@@ -50,7 +52,7 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
                 else
                 {
                     telemetry.TrackTrace("The token is not valid");
-                    return req.CreateResponse(HttpStatusCode.InternalServerError, "The token is not valid");
+                    return req.CreateResponse(HttpStatusCode.Unauthorized, "The token is not valid");
                 }
             }
             catch (Exception ex)

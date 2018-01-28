@@ -25,27 +25,27 @@ namespace AzureFunction.VstsExtension.LaunchDarkly.AzureFunctions
                 telemetry.Context.Operation.Id = context.InvocationId.ToString();
                 telemetry.Context.Operation.Name = "UpdateUserFeatureFlag";
 
-                //Gettings parameters
-                var data = req.Content.ReadAsStringAsync().Result;
+             
+                var data = req.Content.ReadAsStringAsync().Result; //Gettings parameters in Body request
                 log.Info(data);
+                var startTime = DateTime.Now;
+                var timer = System.Diagnostics.Stopwatch.StartNew();
+
                 var formValues = data.Split('&')
                     .Select(value => value.Split('='))
                     .ToDictionary(pair => Uri.UnescapeDataString(pair[0]).Replace("+", " "),
                                   pair => Uri.UnescapeDataString(pair[1]).Replace("+", " "));
-
-
-                string issuedToken = formValues["token"];
+                
                 string account = formValues["account"];
                 string LDproject = formValues["ldproject"];
                 string LDenv = formValues["ldenv"];
                 string feature = formValues["feature"];
                 string active = formValues["active"];
 
-                var startTime = DateTime.Now;
-                var timer = System.Diagnostics.Stopwatch.StartNew();
+                string issuedToken = Helpers.GetUserTokenInRequest(req);
 
                 //Check the token, and compare with the UserId
-                var tokenuserId = CheckVSTSToken.checkTokenValidity(issuedToken, log);
+                var tokenuserId = CheckVSTSToken.checkTokenValidity(issuedToken, "RollUpBoard_ExtensionCertificate");
 
                 if (tokenuserId != null)
                 {
