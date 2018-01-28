@@ -1,4 +1,4 @@
-s# azurefunction-vsts-feature-flags
+# azurefunction-vsts-feature-flags
 
 ![](https://almrangers.visualstudio.com/_apis/public/build/definitions/7f3cfb9a-d1cb-4e66-9d36-1af87b906fe9/154/badge)
 
