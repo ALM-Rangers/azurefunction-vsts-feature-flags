@@ -9,6 +9,8 @@
     "ldenv": "__INTTEST_LD_ENV__",
     "ldfeature": "__INTTEST_LD_FEATURE__",
     "expectedLDHashKey": "__INTTEST_ExpectedLDHashKey__",
-	"VSTSBasicAuthentification" :  "__INTTEST_VSTSBasicAuthentification__"
+    "VSTSBasicAuthentification": "__INTTEST_VSTSBasicAuthentification__",
+    "uriApi-GetUserFeatureFlag": "__appServiceUrl__/api/GetUserFeatureFlag",
+    "ldkey" : "__INTTEST_LD_KEY__"
   }
 ]
