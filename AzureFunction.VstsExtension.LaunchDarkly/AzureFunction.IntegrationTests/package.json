@@ -4,7 +4,8 @@
   "description": "postmanrestapi",
   "main": "index.js",
   "scripts": {
-    "testapi": "newman run Azure_Func_LD.postman_collection.json -e postman_environment.json -r junit,cli,html --reporter-html-export TestResult/result-tests.html --reporter-junit-export TestResult/result-tests.xml -d data-tests.json"
+    "testapi": "newman run Azure_Func_LD.postman_collection.json -e postman_environment.json -r junit,cli,html --reporter-html-export TestResult/result-tests.html --reporter-junit-export TestResult/result-tests.xml -d data-tests.json",
+    "testapi2": "newman run Azure_Func_LD.postman_collection.json -e postman_environment.json"
   },
   "devDependencies": {
     "newman": "^3.7.6"

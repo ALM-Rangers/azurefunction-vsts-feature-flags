@@ -92,14 +92,14 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "account={{vsts-account}}"
+					"raw": "account={{vsts-account}}&appsettingextcert=RollUpBoard_ExtensionCertificate"
 				},
 				"url": "{{uriApi-GetHashKey}}",
 				"description": ""
 			},
 			"response": [
 				{
-					"id": "e41cd18e-da43-42ed-977f-c5e976fb04c6",
+					"id": "b5c477ab-da72-4097-b8bb-f61d4c241fc7",
 					"name": "ex1",
 					"originalRequest": {
 						"method": "POST",
@@ -159,14 +159,14 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "account={{vsts-account}}&feature={{ldfeature}}&active=false&ldproject={{ldproject}}&ldenv={{ldenv}}"
+					"raw": "account={{vsts-account}}&feature={{ldfeature}}&active=false&ldproject={{ldproject}}&ldenv={{ldenv}}&appsettingextcert=RollUpBoard_ExtensionCertificate"
 				},
 				"url": "{{uriApi-UpdateUserFF}}",
 				"description": ""
 			},
 			"response": [
 				{
-					"id": "865f306c-42ec-42ea-bafe-96a65bc08eda",
+					"id": "eadc8bce-ae8d-45cc-891c-f7403c48a22a",
 					"name": "ex1",
 					"originalRequest": {
 						"method": "POST",
@@ -199,18 +199,12 @@
 				{
 					"listen": "test",
 					"script": {
+						"id": "909cdb52-7260-4965-8fd9-66df9a173fa7",
 						"type": "text/javascript",
 						"exec": [
-							"var expectedLDHashKey = data.expectedLDHashKey;",
-							"if(expectedLDHashKey === undefined){",
-							"    expectedLDHashKey = postman.getEnvironmentVariable(\"expectedLDHashKey\");",
-							"}",
-							"tests[\"2-CheckToken AzureFunction - Body matches string\"] = responseBody.has(expectedLDHashKey);",
-							"tests[\"2-CheckToken AzureFunction - Status code is 200\"] = responseCode.code === 200;",
 							"",
+							"tests[\"4-GetUserFeatureFlag AzureFunction - Status code is 200\"] = responseCode.code === 200;",
 							"",
-							"console.log(\"responseBody: \"+responseBody)",
-							"console.log(\"expectedLDHashKey: \"+expectedLDHashKey);",
 							""
 						]
 					}
@@ -241,7 +235,7 @@
 			},
 			"response": [
 				{
-					"id": "7635b474-9782-4b20-be7c-d01c61726cbd",
+					"id": "89d735eb-73aa-4160-9159-0f0b2cbd6ec6",
 					"name": "ex1",
 					"originalRequest": {
 						"method": "POST",
