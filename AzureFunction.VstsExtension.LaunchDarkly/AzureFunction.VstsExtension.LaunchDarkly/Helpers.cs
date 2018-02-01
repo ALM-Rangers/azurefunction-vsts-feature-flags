@@ -46,23 +46,11 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
                 throw new ArgumentNullException(nameof(request));
             }
 
-            string apiVersion = Helpers.GetHeaderValue(request, "api-version");
+            //string apiVersion = Helpers.GetHeaderValue(request, "api-version");
 
-            var data = request.Content.ReadAsStringAsync().Result; //Gettings parameters in Body request
-
-            var formValues = data.Split('&')
-                .Select(value => value.Split('='))
-                .ToDictionary(pair => Uri.UnescapeDataString(pair[0]).Replace("+", " "),
-                              pair => Uri.UnescapeDataString(pair[1]).Replace("+", " "));
             string issuedToken;
-            if (string.IsNullOrEmpty(apiVersion))
-            {
-                issuedToken = formValues["token"];
-            }
-            else
-            {
-                issuedToken = Helpers.GetSecurityToken(request.Headers.Authorization);
-            }
+
+            issuedToken = Helpers.GetSecurityToken(request.Headers.Authorization);
 
             if (string.IsNullOrEmpty(issuedToken))
             {
@@ -72,6 +60,14 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
             {
                 return issuedToken;
             }
+        }
+
+        public static string GetExtCertificatEnvName(string appSettingExtCert, string apiversion)
+        {
+            if (apiversion == "2")
+                return appSettingExtCert;
+            else
+                return "RollUpBoard_ExtensionCertificate";
         }
     }
 }

@@ -41,11 +41,13 @@ namespace AzureFunction.VstsExtension.LaunchDarkly.AzureFunctions
                 string LDenv = formValues["ldenv"];
                 string feature = formValues["feature"];
                 string active = formValues["active"];
+                string appSettingExtCert = formValues["appsettingextcert"]; //"RollUpBoard_ExtensionCertificate"
 
                 string issuedToken = Helpers.GetUserTokenInRequest(req);
 
                 //Check the token, and compare with the UserId
-                var tokenuserId = CheckVSTSToken.checkTokenValidity(issuedToken, "RollUpBoard_ExtensionCertificate");
+                string extcert = Helpers.GetExtCertificatEnvName(appSettingExtCert, Helpers.GetHeaderValue(req, "api-version"));
+                var tokenuserId = CheckVSTSToken.checkTokenValidity(issuedToken, extcert);
 
                 if (tokenuserId != null)
                 {
