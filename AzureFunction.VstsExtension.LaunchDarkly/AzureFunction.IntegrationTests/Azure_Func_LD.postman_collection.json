@@ -52,73 +52,6 @@
 			"response": []
 		},
 		{
-			"name": "2-CheckToken AzureFunction",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							"var expectedLDHashKey = data.expectedLDHashKey;",
-							"if(expectedLDHashKey === undefined){",
-							"    expectedLDHashKey = postman.getEnvironmentVariable(\"expectedLDHashKey\");",
-							"}",
-							"tests[\"2-CheckToken AzureFunction - Body matches string\"] = responseBody.has(expectedLDHashKey);",
-							"tests[\"2-CheckToken AzureFunction - Status code is 200\"] = responseCode.code === 200;",
-							"",
-							"",
-							"console.log(\"responseBody: \"+responseBody)",
-							"console.log(\"expectedLDHashKey: \"+expectedLDHashKey);",
-							""
-						]
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/x-www-form-urlencoded"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "account={{vsts-account}}&token={{token}}"
-				},
-				"url": "{{uriApi-GetHashKey}}",
-				"description": ""
-			},
-			"response": [
-				{
-					"id": "54005acf-87ed-4a39-bacb-b47612ff45c7",
-					"name": "ex1",
-					"originalRequest": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/x-www-form-urlencoded"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "account={{account}}&token={{token}}"
-						},
-						"url": "{{uriApi}}"
-					},
-					"status": "OK",
-					"code": 200,
-					"_postman_previewlanguage": "",
-					"_postman_previewtype": "parsed",
-					"header": [],
-					"cookie": [],
-					"responseTime": "0",
-					"body": "\"65945e676e29b3be97e7ffabcc32a851d8fe2423ada522194ff002e9cd419dd9\""
-				}
-			]
-		},
-		{
 			"name": "2.1-CheckToken AzureFunction v2",
 			"event": [
 				{
@@ -166,66 +99,7 @@
 			},
 			"response": [
 				{
-					"id": "6eeb03f9-68a8-457b-8750-1af0f7575a8c",
-					"name": "ex1",
-					"originalRequest": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/x-www-form-urlencoded"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "account={{account}}&token={{token}}"
-						},
-						"url": "{{uriApi}}"
-					},
-					"status": "OK",
-					"code": 200,
-					"_postman_previewlanguage": "",
-					"_postman_previewtype": "parsed",
-					"header": [],
-					"cookie": [],
-					"responseTime": "0",
-					"body": "\"65945e676e29b3be97e7ffabcc32a851d8fe2423ada522194ff002e9cd419dd9\""
-				}
-			]
-		},
-		{
-			"name": "3-UpdateUserFeatureFlag AzureFunction",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							"tests[\"2-UpdateUserFF AzureFunction - Status code is 200\"] = responseCode.code === 200;",
-							"",
-							"console.log(JSON.parse(responseBody));"
-						]
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/x-www-form-urlencoded"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "account={{vsts-account}}&token={{token}}&feature={{ldfeature}}&active=false&ldproject={{ldproject}}&ldenv={{ldenv}}"
-				},
-				"url": "{{uriApi-UpdateUserFF}}",
-				"description": ""
-			},
-			"response": [
-				{
-					"id": "8092a0f9-bbfe-4a95-a09a-d22a42e406e8",
+					"id": "e41cd18e-da43-42ed-977f-c5e976fb04c6",
 					"name": "ex1",
 					"originalRequest": {
 						"method": "POST",
@@ -292,7 +166,82 @@
 			},
 			"response": [
 				{
-					"id": "304439e7-4e08-4200-ab8b-70e377b133ab",
+					"id": "865f306c-42ec-42ea-bafe-96a65bc08eda",
+					"name": "ex1",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "account={{account}}&token={{token}}"
+						},
+						"url": "{{uriApi}}"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "",
+					"_postman_previewtype": "parsed",
+					"header": [],
+					"cookie": [],
+					"responseTime": "0",
+					"body": "\"65945e676e29b3be97e7ffabcc32a851d8fe2423ada522194ff002e9cd419dd9\""
+				}
+			]
+		},
+		{
+			"name": "4-GetUserFeatureFlag AzureFunction",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var expectedLDHashKey = data.expectedLDHashKey;",
+							"if(expectedLDHashKey === undefined){",
+							"    expectedLDHashKey = postman.getEnvironmentVariable(\"expectedLDHashKey\");",
+							"}",
+							"tests[\"2-CheckToken AzureFunction - Body matches string\"] = responseBody.has(expectedLDHashKey);",
+							"tests[\"2-CheckToken AzureFunction - Status code is 200\"] = responseCode.code === 200;",
+							"",
+							"",
+							"console.log(\"responseBody: \"+responseBody)",
+							"console.log(\"expectedLDHashKey: \"+expectedLDHashKey);",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "api-version",
+						"value": "1"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "account={{vsts-account}}&appsettingextcert=RollUpBoard_ExtensionCertificate&ldkey={{ldkey}}"
+				},
+				"url": "{{uriApi-GetUserFeatureFlag}}",
+				"description": ""
+			},
+			"response": [
+				{
+					"id": "7635b474-9782-4b20-be7c-d01c61726cbd",
 					"name": "ex1",
 					"originalRequest": {
 						"method": "POST",
