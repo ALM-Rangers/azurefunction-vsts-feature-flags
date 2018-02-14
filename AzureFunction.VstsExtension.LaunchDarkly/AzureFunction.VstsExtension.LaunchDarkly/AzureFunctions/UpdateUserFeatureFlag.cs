@@ -24,8 +24,9 @@ namespace AzureFunction.VstsExtension.LaunchDarkly.AzureFunctions
             {
                 telemetry.Context.Operation.Id = context.InvocationId.ToString();
                 telemetry.Context.Operation.Name = "UpdateUserFeatureFlag";
+                int apiversion = Helpers.GetHeaderValue(req, "api-version");
 
-             
+
                 var data = req.Content.ReadAsStringAsync().Result; //Gettings parameters in Body request
                 log.Info(data);
                 var startTime = DateTime.Now;
@@ -41,12 +42,12 @@ namespace AzureFunction.VstsExtension.LaunchDarkly.AzureFunctions
                 string LDenv = formValues["ldenv"];
                 string feature = formValues["feature"];
                 string active = formValues["active"];
-                string appSettingExtCert = formValues["appsettingextcert"]; //"RollUpBoard_ExtensionCertificate"
+                string appSettingExtCert = (apiversion >= 3) ? formValues["appsettingextcert"]: string.Empty; //"RollUpBoard_ExtensionCertificate"
 
                 string issuedToken = Helpers.GetUserTokenInRequest(req);
 
                 //Check the token, and compare with the UserId
-                string extcert = Helpers.GetExtCertificatEnvName(appSettingExtCert, Helpers.GetHeaderValue(req, "api-version"));
+                string extcert = Helpers.GetExtCertificatEnvName(appSettingExtCert, apiversion, 3);
                 var tokenuserId = CheckVSTSToken.checkTokenValidity(issuedToken, extcert);
 
                 if (tokenuserId != null)

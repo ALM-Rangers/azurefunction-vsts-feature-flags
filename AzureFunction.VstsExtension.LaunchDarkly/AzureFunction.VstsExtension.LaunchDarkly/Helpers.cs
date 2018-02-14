@@ -15,16 +15,16 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
             return System.Environment.GetEnvironmentVariable(name, EnvironmentVariableTarget.Process);
         }
 
-        public static string GetHeaderValue(HttpRequestMessage request, string name)
+        public static int GetHeaderValue(HttpRequestMessage request, string name)
         {
             IEnumerable<string> values;
             var found = request.Headers.TryGetValues(name, out values);
             if (found)
             {
-                return values.FirstOrDefault();
+                return int.Parse(values.FirstOrDefault());
             }
 
-            return null;
+            return 0;
         }
 
         public static string GetSecurityToken(AuthenticationHeaderValue value)
@@ -62,9 +62,9 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
             }
         }
 
-        public static string GetExtCertificatEnvName(string appSettingExtCert, string apiversion)
+        public static string GetExtCertificatEnvName(string appSettingExtCert, int apiversion, int minApiversion = 2)
         {
-            if (apiversion == "2")
+            if (apiversion >= minApiversion)
                 return appSettingExtCert;
             else
                 return "RollUpBoard_ExtensionCertificate";
