@@ -30,7 +30,7 @@ namespace AzureFunction.VstsExtension.LaunchDarkly.UnitTests
 
             //act
             string userkey = LaunchDarklyServices.FormatUserKey(userid, account);
-            
+
             //assert
             Assert.IsTrue(userkey == "84ea4845-57ba-4096-909f-zt67y8:84ea4845-57ba-4096-909f-zt67y8");
         }
@@ -53,19 +53,25 @@ namespace AzureFunction.VstsExtension.LaunchDarkly.UnitTests
             HttpRequestMessage req = new HttpRequestMessage();
             req.Headers.Add("api-version", "2");
 
-            string apiversion = Helpers.GetHeaderValue(req, "api-version");
+            int apiversion = Helpers.GetHeaderValue(req, "api-version");
 
-            Assert.IsTrue(apiversion == "2");
+            Assert.IsTrue(apiversion == 2);
         }
 
         [TestMethod]
         public void CanGetExtCertificatEnvName()
         {
-            string certnamev1 = Helpers.GetExtCertificatEnvName("myCertExtname", "1");
-            string certnamev2 = Helpers.GetExtCertificatEnvName("myCertExtname", "2");
+            string certnamev1 = Helpers.GetExtCertificatEnvName("myCertExtname", 1);
+            string certnamev2 = Helpers.GetExtCertificatEnvName("myCertExtname", 2);
+
+            string certnamevmin = Helpers.GetExtCertificatEnvName("myCertExtname", 2, 1);
+            string certnamevmin2 = Helpers.GetExtCertificatEnvName("myCertExtname", 2, 3);
+
 
             Assert.IsTrue(certnamev1 == "RollUpBoard_ExtensionCertificate");
             Assert.IsTrue(certnamev2 == "myCertExtname");
+            Assert.IsTrue(certnamevmin == "myCertExtname");
+            Assert.IsTrue(certnamevmin2 == "RollUpBoard_ExtensionCertificate");
         }
     }
 }
