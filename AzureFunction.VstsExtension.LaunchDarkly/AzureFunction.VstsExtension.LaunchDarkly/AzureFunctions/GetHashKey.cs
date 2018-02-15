@@ -23,6 +23,7 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
             {
                 telemetry.Context.Operation.Id = context.InvocationId.ToString();
                 telemetry.Context.Operation.Name = "GetHashKey";
+                int apiversion = Helpers.GetHeaderValue(req, "api-version");
 
 
                 var data = req.Content.ReadAsStringAsync().Result; //Gettings parameters in Body request     
@@ -36,14 +37,14 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
                 #endregion
 
                 var account = formValues["account"];
-                var appSettingExtCert = formValues["appsettingextcert"];
+                var appSettingExtCert = (apiversion >= 3) ? formValues["appsettingextcert"] : string.Empty;
 
                 string issuedToken = Helpers.GetUserTokenInRequest(req);
 
                 #region display log for debug
                 log.Info(issuedToken);
                 #endregion
-                string extcert = Helpers.GetExtCertificatEnvName(appSettingExtCert, Helpers.GetHeaderValue(req, "api-version"));
+                string extcert = Helpers.GetExtCertificatEnvName(appSettingExtCert, apiversion, 3);
                 var tokenuserId = CheckVSTSToken.checkTokenValidity(issuedToken, extcert); //Check the token, and compare with the VSTS UserId
                 if (tokenuserId != null)
                 {
