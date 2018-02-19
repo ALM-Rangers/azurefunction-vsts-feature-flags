@@ -11,7 +11,7 @@
     "expectedLDHashKey": "__INTTEST_ExpectedLDHashKey__",
     "VSTSBasicAuthentification": "__INTTEST_VSTSBasicAuthentification__",
     "uriApi-GetUserFeatureFlag": "__appServiceUrl__/api/GetUserFeatureFlag",
-    "ldkey": "__INTTEST_LD_KEY__",
+    "ldkey": "__LaunchDarkly_SDK_Key__",
     "uriApi-TrackFeatureFlag": "__appServiceUrl__/api/TrackEventFeatureFlag"
   }
 ]
