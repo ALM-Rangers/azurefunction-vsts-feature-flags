@@ -1,4 +1,5 @@
-﻿using Microsoft.Azure.WebJobs.Host;
+﻿using LaunchDarkly.Client;
+using Microsoft.Azure.WebJobs.Host;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
@@ -51,6 +52,21 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
                 return response;
             }
 
+        }
+
+        public static IDictionary<string, Newtonsoft.Json.Linq.JToken> GetAllUserFlags(string account, string launchDarklySDKkey, string tokenuserId)
+        {
+            LdClient ldClient = new LdClient(launchDarklySDKkey);
+            User user = new User(tokenuserId + ":" + account);
+            var flags = ldClient.AllFlags(user);
+            return flags;
+        }
+
+        public static void TrackFeatureFlag(string account, string launchDarklySDKkey, string customEvent, string tokenuserId)
+        {
+            LdClient ldClient = new LdClient(launchDarklySDKkey);
+            User user = new User(tokenuserId + ":" + account);
+            ldClient.Track(customEvent, user, string.Empty);
         }
     }
 }

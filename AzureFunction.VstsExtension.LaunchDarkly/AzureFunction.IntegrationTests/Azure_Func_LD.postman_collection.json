@@ -99,7 +99,7 @@
 			},
 			"response": [
 				{
-					"id": "749e7b40-8e8d-4c78-8f46-82fcb8ceafbb",
+					"id": "989e60fa-2ac0-4b2c-9398-48a84e92f56c",
 					"name": "ex1",
 					"originalRequest": {
 						"method": "POST",
@@ -166,7 +166,7 @@
 			},
 			"response": [
 				{
-					"id": "b74e22c3-1e3d-4ce1-a6ee-b515dcec17c1",
+					"id": "b040329d-e116-4ee3-86fe-0c177d227576",
 					"name": "ex1",
 					"originalRequest": {
 						"method": "POST",
@@ -234,7 +234,75 @@
 			},
 			"response": [
 				{
-					"id": "a1a1471b-bea8-4e1f-8ec9-bbca9596c1ba",
+					"id": "d0357ebe-1726-4153-b838-2fe052357d9a",
+					"name": "ex1",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "account={{account}}&token={{token}}"
+						},
+						"url": "{{uriApi}}"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "",
+					"_postman_previewtype": "parsed",
+					"header": [],
+					"cookie": [],
+					"responseTime": "0",
+					"body": "\"65945e676e29b3be97e7ffabcc32a851d8fe2423ada522194ff002e9cd419dd9\""
+				}
+			]
+		},
+		{
+			"name": "3.1-UpdateUserFeatureFlag AzureFunction v4",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e46b466f-496d-49be-92c3-24ba1d9f7a8b",
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"2-UpdateUserFF AzureFunction v4 - Status code is 200\"] = responseCode.code === 200;",
+							"",
+							"console.log(JSON.parse(responseBody));"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "api-version",
+						"value": "4"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "account={{vsts-account}}&feature={{ldfeature}}&active=false&ldproject={{ldproject}}&ldenv={{ldenv}}&extcertkey=RollUpBoardExtensionCertificate"
+				},
+				"url": "{{uriApi-UpdateUserFF}}",
+				"description": ""
+			},
+			"response": [
+				{
+					"id": "f3638984-f9e5-4a33-b1a9-5a25c60d78d8",
 					"name": "ex1",
 					"originalRequest": {
 						"method": "POST",
@@ -303,7 +371,76 @@
 			},
 			"response": [
 				{
-					"id": "892cd42f-493a-40e1-a4ea-ed3dbfefddea",
+					"id": "8ff7ccd0-9351-4009-811b-7b40f1734e3e",
+					"name": "ex1",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "account={{account}}&token={{token}}"
+						},
+						"url": "{{uriApi}}"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "",
+					"_postman_previewtype": "parsed",
+					"header": [],
+					"cookie": [],
+					"responseTime": "0",
+					"body": "\"65945e676e29b3be97e7ffabcc32a851d8fe2423ada522194ff002e9cd419dd9\""
+				}
+			]
+		},
+		{
+			"name": "4.1-GetUserFeatureFlag AzureFunction v2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "08cda2e2-e7d0-411b-b14a-8f94b288bd36",
+						"type": "text/javascript",
+						"exec": [
+							"",
+							"tests[\"4.1-GetUserFeatureFlag v2 AzureFunction - Status code is 200\"] = responseCode.code === 200;",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "api-version",
+						"value": "2"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "account={{vsts-account}}&extcertkey=RollUpBoardExtensionCertificate&ldkey={{ldkey}}"
+				},
+				"url": "{{uriApi-GetUserFeatureFlag}}",
+				"description": ""
+			},
+			"response": [
+				{
+					"id": "2f409246-2763-4e41-b0fe-f8442f1e3c62",
 					"name": "ex1",
 					"originalRequest": {
 						"method": "POST",
@@ -372,7 +509,76 @@
 			},
 			"response": [
 				{
-					"id": "4bc33d09-44a4-48d9-b729-3e36a580407e",
+					"id": "492d1201-3e04-462b-a1e5-5ef8417c92b4",
+					"name": "ex1",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "account={{account}}&token={{token}}"
+						},
+						"url": "{{uriApi}}"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "",
+					"_postman_previewtype": "parsed",
+					"header": [],
+					"cookie": [],
+					"responseTime": "0",
+					"body": "\"65945e676e29b3be97e7ffabcc32a851d8fe2423ada522194ff002e9cd419dd9\""
+				}
+			]
+		},
+		{
+			"name": "5.1-TrackFeatureFlag AzureFunction v2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "15025a55-7d79-4f4a-baf1-aae0cc804c7e",
+						"type": "text/javascript",
+						"exec": [
+							"",
+							"tests[\"5-TrackEventFeatureFlag v2 AzureFunction - Status code is 200\"] = responseCode.code === 200;",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "api-version",
+						"value": "2"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "account={{vsts-account}}&extcertkey=RollUpBoardExtensionCertificate&ldkey={{ldkey}}&customevent={{eventToTrack}}"
+				},
+				"url": "{{uriApi-TrackFeatureFlag}}",
+				"description": ""
+			},
+			"response": [
+				{
+					"id": "f40f5dee-9e16-4cb4-b9ba-1be53919a41e",
 					"name": "ex1",
 					"originalRequest": {
 						"method": "POST",

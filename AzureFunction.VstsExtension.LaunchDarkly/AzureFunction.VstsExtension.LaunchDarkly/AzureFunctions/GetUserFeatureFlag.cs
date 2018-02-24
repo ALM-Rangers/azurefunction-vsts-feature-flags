@@ -9,6 +9,12 @@ using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
 using System.IdentityModel.Tokens;
 using LaunchDarkly.Client;
+using Microsoft.Azure.Services.AppAuthentication;
+using Microsoft.Azure.KeyVault;
+using System.Threading.Tasks;
+using Microsoft.Azure.KeyVault.Models;
+using Microsoft.IdentityModel.Clients.ActiveDirectory;
+using System.Collections.Generic;
 
 namespace AzureFunction.VstsExtension.LaunchDarkly
 {
@@ -16,7 +22,8 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
     {
         private static string key = TelemetryConfiguration.Active.InstrumentationKey = System.Environment.GetEnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY", EnvironmentVariableTarget.Process);
         private static TelemetryClient telemetry = new TelemetryClient() { InstrumentationKey = key };
-        
+
+
         [FunctionName("GetUserFeatureFlag")]
         public static HttpResponseMessage Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "GetUserFeatureFlag")]HttpRequestMessage req, ExecutionContext context, TraceWriter log)
         {
@@ -26,6 +33,7 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
                 telemetry.Context.Operation.Name = "GetUserFeatureFlag";
                 var startTime = DateTime.Now;
                 var timer = System.Diagnostics.Stopwatch.StartNew();
+                int apiversion = Helpers.GetHeaderValue(req, "api-version");
 
                 var data = req.Content.ReadAsStringAsync().Result; //Gettings parameters in Body request     
                 var formValues = data.Split('&')
@@ -38,24 +46,19 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
                 #endregion
 
                 var account = formValues["account"];
-                var appSettingExtCert = formValues["appsettingextcert"]; //"RollUpBoard_ExtensionCertificate"
                 var launchDarklySDKkey = formValues["ldkey"];
-                
+                var appSettingExtCert = (apiversion < 2) ? formValues["appsettingextcert"] : string.Empty; //"RollUpBoard_ExtensionCertificate"
+                var ExtCertKey = (apiversion >= 2) ? formValues["extcertkey"] : string.Empty;
+                bool useKeyVault = (apiversion >= 2);
+
                 //get the token passed in the header request
-                string issuedToken = Helpers.GetUserTokenInRequest(req);
+                string tokenuserId = Helpers.TokenIsValid(req, useKeyVault , appSettingExtCert, ExtCertKey);
 
-                #region display log for debug
-                log.Info(issuedToken);
-                #endregion
 
-                string extcert = Helpers.GetExtCertificatEnvName(appSettingExtCert, Helpers.GetHeaderValue(req, "api-version"));
-                var tokenuserId = CheckVSTSToken.checkTokenValidity(issuedToken, extcert); //Check the token, and compare with the VSTS UserId
+                //Check the token, and compare with the VSTS UserId
                 if (tokenuserId != null)
                 {
-                    
-                    LdClient ldClient = new LdClient(launchDarklySDKkey);
-                    User user = new User(tokenuserId + ":" + account);
-                    var flags = ldClient.AllFlags(user);
+                    IDictionary<string, Newtonsoft.Json.Linq.JToken> flags = LaunchDarklyServices.GetAllUserFlags(account, launchDarklySDKkey, tokenuserId);
                     if (flags != null)
                     {
                         return req.CreateResponse(HttpStatusCode.OK, flags); //return the users flags
@@ -78,5 +81,7 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
                 return req.CreateResponse(HttpStatusCode.InternalServerError, ex);
             }
         }
+
+
     }
 }

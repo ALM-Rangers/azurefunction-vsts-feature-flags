@@ -5,7 +5,8 @@ Param(
   [string]$RollUp_ExtensionCertificate,
   [string]$LDSdkKey,
   [string]$LDAPIKey,
-  [string]$AppInsightKey
+  [string]$AppInsightKey,
+  [string]$KeyVaultName
 )
 
 $webApp = Get-AzureRMWebAppSlot -ResourceGroupName $myResourceGroup -Name $Site -Slot $slot
@@ -27,5 +28,8 @@ Write-Host "Update LaunchDarkly_API_Key : "$LDAPIKey
 
 $hash['APPINSIGHTS_INSTRUMENTATIONKEY'] = $AppInsightKey
 Write-Host "Update APPINSIGHTS_INSTRUMENTATIONKEY : "$AppInsightKey
+
+$hash['KeyVaultName'] = $KeyVaultName
+Write-Host "Update KeyVaultName : "$KeyVaultName
 
 Set-AzureRMWebAppSlot -ResourceGroupName $myResourceGroup -Name $Site -AppSettings $hash -Slot $slot

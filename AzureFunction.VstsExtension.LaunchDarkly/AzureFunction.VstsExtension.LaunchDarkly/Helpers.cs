@@ -1,4 +1,6 @@
 ﻿using AzureFunction.VstsExtension.LaunchDarkly.AzureFunctions;
+using Microsoft.Azure.KeyVault;
+using Microsoft.Azure.Services.AppAuthentication;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -68,6 +70,34 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
                 return appSettingExtCert;
             else
                 return "RollUpBoard_ExtensionCertificate";
+        }
+
+        public static string GetKeyVaultSecretValue(string ExtCertKey)
+        {
+            // This is the part where I grab the secret.
+            var azureServiceTokenProvider = new AzureServiceTokenProvider();
+            var keyClient = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(azureServiceTokenProvider.KeyVaultTokenCallback));
+            string secretvalue = keyClient.GetSecretAsync(string.Format("https://{0}.vault.azure.net/secrets/{1}/", Helpers.GetEnvironmentVariable("KeyVaultName"), ExtCertKey)).Result.Value;
+            return secretvalue;
+        }
+
+        public static string TokenIsValid(HttpRequestMessage req, bool useKeyVault, string appSettingExtCert, string ExtCertKey)
+        {
+            string issuedToken = Helpers.GetUserTokenInRequest(req);
+
+            var tokenuserId = string.Empty;
+            if (useKeyVault)
+            {
+                string extCert = Helpers.GetKeyVaultSecretValue(ExtCertKey);
+                tokenuserId = CheckVSTSToken.checkTokenValidityV2(issuedToken, extCert);
+            }
+            else
+            {
+                string extcert = appSettingExtCert;
+                tokenuserId = CheckVSTSToken.checkTokenValidity(issuedToken, extcert);
+            }
+
+            return tokenuserId;
         }
     }
 }
