@@ -99,74 +99,7 @@
 			},
 			"response": [
 				{
-					"id": "989e60fa-2ac0-4b2c-9398-48a84e92f56c",
-					"name": "ex1",
-					"originalRequest": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/x-www-form-urlencoded"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "account={{account}}&token={{token}}"
-						},
-						"url": "{{uriApi}}"
-					},
-					"status": "OK",
-					"code": 200,
-					"_postman_previewlanguage": "",
-					"_postman_previewtype": "parsed",
-					"header": [],
-					"cookie": [],
-					"responseTime": "0",
-					"body": "\"65945e676e29b3be97e7ffabcc32a851d8fe2423ada522194ff002e9cd419dd9\""
-				}
-			]
-		},
-		{
-			"name": "3.1-UpdateUserFeatureFlag AzureFunction v2",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							"tests[\"2-UpdateUserFF AzureFunction - Status code is 200\"] = responseCode.code === 200;",
-							"",
-							"console.log(JSON.parse(responseBody));"
-						]
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/x-www-form-urlencoded"
-					},
-					{
-						"key": "api-version",
-						"value": "2"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer {{token}}"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "account={{vsts-account}}&feature={{ldfeature}}&active=false&ldproject={{ldproject}}&ldenv={{ldenv}}"
-				},
-				"url": "{{uriApi-UpdateUserFF}}",
-				"description": ""
-			},
-			"response": [
-				{
-					"id": "b040329d-e116-4ee3-86fe-0c177d227576",
+					"id": "096c7d3c-b78d-42cb-9e9f-29f16fa7856e",
 					"name": "ex1",
 					"originalRequest": {
 						"method": "POST",
@@ -234,7 +167,7 @@
 			},
 			"response": [
 				{
-					"id": "d0357ebe-1726-4153-b838-2fe052357d9a",
+					"id": "083cedb4-c2fd-4f50-9c9a-e56041dc0cc9",
 					"name": "ex1",
 					"originalRequest": {
 						"method": "POST",
@@ -302,7 +235,7 @@
 			},
 			"response": [
 				{
-					"id": "f3638984-f9e5-4a33-b1a9-5a25c60d78d8",
+					"id": "4c9e43eb-369e-48d9-9deb-36246abc7b9b",
 					"name": "ex1",
 					"originalRequest": {
 						"method": "POST",
@@ -371,7 +304,7 @@
 			},
 			"response": [
 				{
-					"id": "8ff7ccd0-9351-4009-811b-7b40f1734e3e",
+					"id": "9f055921-3215-4f79-b490-2a0ed31ca2db",
 					"name": "ex1",
 					"originalRequest": {
 						"method": "POST",
@@ -440,7 +373,7 @@
 			},
 			"response": [
 				{
-					"id": "2f409246-2763-4e41-b0fe-f8442f1e3c62",
+					"id": "96f90870-7608-49cc-b954-4b2f83038a48",
 					"name": "ex1",
 					"originalRequest": {
 						"method": "POST",
@@ -509,7 +442,7 @@
 			},
 			"response": [
 				{
-					"id": "492d1201-3e04-462b-a1e5-5ef8417c92b4",
+					"id": "2d3b41d6-1624-4852-a24b-c9ced24c7c85",
 					"name": "ex1",
 					"originalRequest": {
 						"method": "POST",
@@ -578,7 +511,7 @@
 			},
 			"response": [
 				{
-					"id": "f40f5dee-9e16-4cb4-b9ba-1be53919a41e",
+					"id": "28975c77-4b01-4951-8a92-00f72c92c4d1",
 					"name": "ex1",
 					"originalRequest": {
 						"method": "POST",
