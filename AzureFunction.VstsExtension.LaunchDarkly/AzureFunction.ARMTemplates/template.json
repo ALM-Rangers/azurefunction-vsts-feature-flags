@@ -101,6 +101,9 @@
       "apiVersion": "2016-08-01",
       "location": "[parameters('siteLocation')]",
       "scale": null,
+      "identity": {
+        "type": "SystemAssigned"
+      },
       "properties": {
         "enabled": true,
         "hostNameSslStates": [
@@ -309,6 +312,9 @@
       "apiVersion": "2016-08-01",
       "location": "[parameters('siteLocation')]",
       "scale": null,
+      "identity": {
+        "type": "SystemAssigned"
+      },
       "properties": {
         "enabled": true,
         "hostNameSslStates": [
