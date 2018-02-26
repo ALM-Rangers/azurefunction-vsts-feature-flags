@@ -47,7 +47,7 @@ namespace AzureFunction.VstsExtension.LaunchDarkly.AzureFunctions
                 bool useKeyVault = (apiversion >= 4);
 
                 //get the token passed in the header request
-                string tokenuserId = Helpers.TokenIsValid(req, useKeyVault, appSettingExtCert, ExtCertKey);
+                string tokenuserId = Helpers.TokenIsValid(req, useKeyVault, appSettingExtCert, ExtCertKey, log);
 
 
                 if (tokenuserId != null)

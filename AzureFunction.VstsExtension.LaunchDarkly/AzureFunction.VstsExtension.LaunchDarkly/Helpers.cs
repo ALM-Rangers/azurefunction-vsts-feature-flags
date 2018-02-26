@@ -1,6 +1,7 @@
 ﻿using AzureFunction.VstsExtension.LaunchDarkly.AzureFunctions;
 using Microsoft.Azure.KeyVault;
 using Microsoft.Azure.Services.AppAuthentication;
+using Microsoft.Azure.WebJobs.Host;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -72,23 +73,25 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
                 return "RollUpBoard_ExtensionCertificate";
         }
 
-        public static string GetKeyVaultSecretValue(string ExtCertKey)
+        public static string GetKeyVaultSecretValue(string ExtCertKey, TraceWriter log)
         {
             // This is the part where I grab the secret.
             var azureServiceTokenProvider = new AzureServiceTokenProvider();
             var keyClient = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(azureServiceTokenProvider.KeyVaultTokenCallback));
-            string secretvalue = keyClient.GetSecretAsync(string.Format("https://{0}.vault.azure.net/secrets/{1}/", Helpers.GetEnvironmentVariable("KeyVaultName"), ExtCertKey)).Result.Value;
+            string keyVaultSecretUri = string.Format("https://{0}.vault.azure.net/secrets/{1}/", Helpers.GetEnvironmentVariable("KeyVaultName"), ExtCertKey);
+            string secretvalue = keyClient.GetSecretAsync(keyVaultSecretUri).Result.Value;
+            log.Info("Get the value from Key Vault: " + keyVaultSecretUri);
             return secretvalue;
         }
 
-        public static string TokenIsValid(HttpRequestMessage req, bool useKeyVault, string appSettingExtCert, string ExtCertKey)
+        public static string TokenIsValid(HttpRequestMessage req, bool useKeyVault, string appSettingExtCert, string ExtCertKey, TraceWriter log)
         {
             string issuedToken = Helpers.GetUserTokenInRequest(req);
 
             var tokenuserId = string.Empty;
             if (useKeyVault)
             {
-                string extCert = Helpers.GetKeyVaultSecretValue(ExtCertKey);
+                string extCert = Helpers.GetKeyVaultSecretValue(ExtCertKey, log);
                 tokenuserId = CheckVSTSToken.checkTokenValidityV2(issuedToken, extCert);
             }
             else

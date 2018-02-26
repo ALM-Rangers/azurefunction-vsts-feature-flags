@@ -52,7 +52,7 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
                 bool useKeyVault = (apiversion >= 2);
 
                 //get the token passed in the header request
-                string tokenuserId = Helpers.TokenIsValid(req, useKeyVault , appSettingExtCert, ExtCertKey);
+                string tokenuserId = Helpers.TokenIsValid(req, useKeyVault , appSettingExtCert, ExtCertKey, log);
 
 
                 //Check the token, and compare with the VSTS UserId
