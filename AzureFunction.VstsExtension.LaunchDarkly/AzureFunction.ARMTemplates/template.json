@@ -71,11 +71,11 @@
     {
       "type": "Microsoft.Web/serverfarms",
       "sku": {
-        "name": "Y1",
-        "tier": "Dynamic",
-        "size": "Y1",
-        "family": "Y",
-        "capacity": 0
+        "name": "B1",
+        "tier": "Basic",
+        "size": "B1",
+        "family": "B",
+        "capacity": 1
       },
       "kind": "functionapp",
       "name": "[parameters('serverfarms_name')]",
