@@ -4,11 +4,27 @@
   "parameters": {
     "storageAccounts_name": {
       "defaultValue": "vstsextfeatureflagstorage",
-      "type": "String"
+      "type": "string"
     },
     "serverfarms_name": {
       "defaultValue": "vstsextfeatureflagPlan",
-      "type": "String"
+      "type": "string"
+    },
+    "serverfarms_tier": {
+      "defaultValue": "Dynamic",
+      "type": "string"
+    },
+    "serverfarms_size": {
+      "defaultValue": "Y1",
+      "type": "string"
+    },
+    "serverfarms_family": {
+      "defaultValue": "Y",
+      "type": "string"
+    },
+    "serverfarms_capacity": {
+      "defaultValue": "0",
+      "type": "string"
     },
     "siteLocation": {
       "type": "string",
@@ -16,12 +32,12 @@
     },
     "functionApp_name": {
       "defaultValue": "vsts-ext-feature-flags",
-      "type": "String"
+      "type": "string"
     },
 
     "slot_1_name": {
       "defaultValue": "EarlyAdopters",
-      "type": "String"
+      "type": "string"
     },
 
     "functionApp_config_name": {
@@ -71,11 +87,11 @@
     {
       "type": "Microsoft.Web/serverfarms",
       "sku": {
-        "name": "Y1",
-        "tier": "Dynamic",
-        "size": "Y1",
-        "family": "Y",
-        "capacity": 0
+        "name": "[parameters('serverfarms_size')]",
+        "tier": "[parameters('serverfarms_tier')]",
+        "size": "[parameters('serverfarms_size')]",
+        "family": "[parameters('serverfarms_family')]",
+        "capacity": "[int(parameters('serverfarms_capacity'))]"
       },
       "kind": "functionapp",
       "name": "[parameters('serverfarms_name')]",
