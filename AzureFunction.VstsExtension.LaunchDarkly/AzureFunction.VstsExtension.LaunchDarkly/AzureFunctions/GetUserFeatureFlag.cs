@@ -52,10 +52,13 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
                 var tokenuserId = CheckVSTSToken.checkTokenValidity(issuedToken, extcert); //Check the token, and compare with the VSTS UserId
                 if (tokenuserId != null)
                 {
-                    
-                    LdClient ldClient = new LdClient(launchDarklySDKkey);
-                    User user = new User(tokenuserId + ":" + account);
+
+                    Configuration ldConfig = Configuration.Default(launchDarklySDKkey);
+                    LdClient ldClient = new LdClient(ldConfig);
+                    User user = User.WithKey(tokenuserId + ":" + account);
                     var flags = ldClient.AllFlags(user);
+                    ldClient.Dispose();
+
                     if (flags != null)
                     {
                         return req.CreateResponse(HttpStatusCode.OK, flags); //return the users flags
