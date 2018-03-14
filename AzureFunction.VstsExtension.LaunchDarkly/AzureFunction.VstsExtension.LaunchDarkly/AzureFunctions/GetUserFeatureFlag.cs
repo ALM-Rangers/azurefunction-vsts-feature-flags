@@ -9,6 +9,7 @@ using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
 using System.IdentityModel.Tokens;
 using LaunchDarkly.Client;
+using System.Threading.Tasks;
 
 namespace AzureFunction.VstsExtension.LaunchDarkly
 {
@@ -18,7 +19,7 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
         private static TelemetryClient telemetry = new TelemetryClient() { InstrumentationKey = key };
         
         [FunctionName("GetUserFeatureFlag")]
-        public static HttpResponseMessage Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "GetUserFeatureFlag")]HttpRequestMessage req, ExecutionContext context, TraceWriter log)
+        public static async Task<HttpResponseMessage> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "GetUserFeatureFlag")]HttpRequestMessage req, ExecutionContext context, TraceWriter log)
         {
             try
             {
