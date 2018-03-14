@@ -57,16 +57,18 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
         public static IDictionary<string, Newtonsoft.Json.Linq.JToken> GetAllUserFlags(string account, string launchDarklySDKkey, string tokenuserId)
         {
             LdClient ldClient = new LdClient(launchDarklySDKkey);
-            User user = new User(tokenuserId + ":" + account);
+            User user = User.WithKey(tokenuserId + ":" + account);
             var flags = ldClient.AllFlags(user);
+            ldClient.Dispose();
             return flags;
         }
 
         public static void TrackFeatureFlag(string account, string launchDarklySDKkey, string customEvent, string tokenuserId)
         {
             LdClient ldClient = new LdClient(launchDarklySDKkey);
-            User user = new User(tokenuserId + ":" + account);
+            User user = User.WithKey(tokenuserId + ":" + account);
             ldClient.Track(customEvent, user, string.Empty);
+            ldClient.Flush();
         }
     }
 }
