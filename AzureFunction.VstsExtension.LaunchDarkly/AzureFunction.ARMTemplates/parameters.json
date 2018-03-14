@@ -8,6 +8,18 @@
     "serverfarms_name": {
       "value": "null"
     },
+    "serverfarms_tier": {
+      "value": "Dynamic"
+    },
+    "serverfarms_size": {
+      "value": "Y1"
+    },
+    "serverfarms_family": {
+      "value": "Y"
+    },
+    "serverfarms_capacity": {
+      "value": "0"
+    },
     "functionApp_name": {
       "value": "null"
     },
