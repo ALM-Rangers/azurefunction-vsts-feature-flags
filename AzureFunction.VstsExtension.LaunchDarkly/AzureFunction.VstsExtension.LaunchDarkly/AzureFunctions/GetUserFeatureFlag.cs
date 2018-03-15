@@ -9,6 +9,8 @@ using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
 using System.IdentityModel.Tokens;
 using LaunchDarkly.Client;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace AzureFunction.VstsExtension.LaunchDarkly
 {
@@ -18,7 +20,7 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
         private static TelemetryClient telemetry = new TelemetryClient() { InstrumentationKey = key };
         
         [FunctionName("GetUserFeatureFlag")]
-        public static HttpResponseMessage Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "GetUserFeatureFlag")]HttpRequestMessage req, ExecutionContext context, TraceWriter log)
+        public static async Task<HttpResponseMessage> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "GetUserFeatureFlag")]HttpRequestMessage req, ExecutionContext context, TraceWriter log)
         {
             try
             {
@@ -27,7 +29,7 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
                 var startTime = DateTime.Now;
                 var timer = System.Diagnostics.Stopwatch.StartNew();
 
-                var data = req.Content.ReadAsStringAsync().Result; //Gettings parameters in Body request     
+                var data = await req.Content.ReadAsStringAsync(); //Gettings parameters in Body request     
                 var formValues = data.Split('&')
                     .Select(value => value.Split('='))
                     .ToDictionary(pair => Uri.UnescapeDataString(pair[0]).Replace("+", " "),
@@ -44,21 +46,24 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
                 //get the token passed in the header request
                 string issuedToken = Helpers.GetUserTokenInRequest(req);
 
-                #region display log for debug
-                log.Info(issuedToken);
-                #endregion
 
                 string extcert = Helpers.GetExtCertificatEnvName(appSettingExtCert, Helpers.GetHeaderValue(req, "api-version"));
                 var tokenuserId = CheckVSTSToken.checkTokenValidity(issuedToken, extcert); //Check the token, and compare with the VSTS UserId
                 if (tokenuserId != null)
                 {
-                    
-                    LdClient ldClient = new LdClient(launchDarklySDKkey);
-                    User user = new User(tokenuserId + ":" + account);
-                    var flags = ldClient.AllFlags(user);
-                    if (flags != null)
+
+                    Configuration ldConfig = Configuration.Default(launchDarklySDKkey);
+                    LdClient ldClient = new LdClient(ldConfig);
+                    User user = User.WithKey(tokenuserId + ":" + account);
+                    //var flags = ldClient.AllFlags(user);
+                    Dictionary<string, bool> userFlags = new Dictionary<string, bool>();
+                    userFlags.Add("enable-telemetry", ldClient.BoolVariation("enable-telemetry", user));
+                    userFlags.Add("display-logs", ldClient.BoolVariation("display-logs", user));
+                    ldClient.Dispose();
+
+                    if (userFlags != null)
                     {
-                        return req.CreateResponse(HttpStatusCode.OK, flags); //return the users flags
+                        return req.CreateResponse(HttpStatusCode.OK, userFlags); //return the users flags
                     }
                     else
                     {

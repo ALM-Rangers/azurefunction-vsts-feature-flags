@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.8
+VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "AzureFunction.ARMTemplates", "AzureFunction.ARMTemplates\AzureFunction.ARMTemplates.deployproj", "{5C0236E8-52B7-47B6-92E8-7F0793D2B349}"
 EndProject
