@@ -52,14 +52,14 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
                 if (tokenuserId != null)
                 {
 
-                    Configuration ldConfig = Configuration.Default(launchDarklySDKkey);
-                    LdClient ldClient = new LdClient(ldConfig);
-                    User user = User.WithKey(tokenuserId + ":" + account);
-                    //var flags = ldClient.AllFlags(user);
+                    //Configuration ldConfig = Configuration.Default(launchDarklySDKkey);
+                    //LdClient ldClient = new LdClient(ldConfig);
+                    //User user = User.WithKey(tokenuserId + ":" + account);
+                    ////var flags = ldClient.AllFlags(user);
                     Dictionary<string, bool> userFlags = new Dictionary<string, bool>();
-                    userFlags.Add("enable-telemetry", ldClient.BoolVariation("enable-telemetry", user));
-                    userFlags.Add("display-logs", ldClient.BoolVariation("display-logs", user));
-                    ldClient.Dispose();
+                    //userFlags.Add("enable-telemetry", ldClient.BoolVariation("enable-telemetry", user));
+                    //userFlags.Add("display-logs", ldClient.BoolVariation("display-logs", user));
+                    //ldClient.Dispose();
 
                     if (userFlags != null)
                     {
