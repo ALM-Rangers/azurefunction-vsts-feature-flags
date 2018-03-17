@@ -68,17 +68,20 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
 
         public static async Task<Dictionary<string, bool>> GetUserFeatureFlags(string LDproject, string LDenv, string userkey)
         {
-            HttpResponseMessage getStatusResponse = await GetUserFlags(LDproject, LDenv, userkey);
-            var getflagsusers = getStatusResponse.Content.ReadAsStringAsync().Result;
             Dictionary<string, bool> userFlags = new Dictionary<string, bool>();
-            dynamic jobj = JObject.Parse(getflagsusers);
-            foreach (JProperty prop in jobj["items"])
+            HttpResponseMessage getResponse = await GetUserFlags(LDproject, LDenv, userkey);
+            if (getResponse.StatusCode == HttpStatusCode.OK)
             {
-                string ffname = prop.Name;
-                string ffvalue = prop.Value["_value"].ToString();
-                userFlags.Add(ffname, Convert.ToBoolean(ffvalue));
+                var getflagsusers = getResponse.Content.ReadAsStringAsync().Result;
+                
+                dynamic jobj = JObject.Parse(getflagsusers);
+                foreach (JProperty prop in jobj["items"])
+                {
+                    string ffname = prop.Name;
+                    string ffvalue = prop.Value["_value"].ToString();
+                    userFlags.Add(ffname, Convert.ToBoolean(ffvalue));
+                }
             }
-
             return userFlags;
         }
     }

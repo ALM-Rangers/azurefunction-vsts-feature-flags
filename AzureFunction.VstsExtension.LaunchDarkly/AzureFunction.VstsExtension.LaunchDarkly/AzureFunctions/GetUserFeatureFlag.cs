@@ -57,19 +57,24 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
                 var tokenuserId = CheckVSTSToken.checkTokenValidity(issuedToken, extcert); //Check the token, and compare with the VSTS UserId
                 if (tokenuserId != null)
                 {
-                    // LD SDK performance review
-                    //Configuration ldConfig = Configuration.Default(launchDarklySDKkey);
-                    //LdClient ldClient = new LdClient(ldConfig);
-                    //User user = User.WithKey(tokenuserId + ":" + account);
-                    //var flags = ldClient.AllFlags(user);
-                    //userFlags.Add("enable-telemetry", ldClient.BoolVariation("enable-telemetry", user));
-                    //userFlags.Add("display-logs", ldClient.BoolVariation("display-logs", user));
-                    //ldClient.Dispose();
-
                     var userkey = LaunchDarklyServices.FormatUserKey(tokenuserId, account);
+                    Dictionary<string, bool> userFlags = new Dictionary<string, bool>();
 
-                    Dictionary<string, bool> userFlags = await LaunchDarklyServices.GetUserFeatureFlags(LDproject, LDenv, userkey);
-
+                    // LD SDK performance review
+                    if (apiversion == 1)
+                    {
+                        Configuration ldConfig = Configuration.Default(launchDarklySDKkey);
+                        LdClient ldClient = new LdClient(ldConfig);
+                        User user = User.WithKey(userkey);
+                        var flags = ldClient.AllFlags(user);
+                        userFlags.Add("enable-telemetry", ldClient.BoolVariation("enable-telemetry", user));
+                        userFlags.Add("display-logs", ldClient.BoolVariation("display-logs", user));
+                        ldClient.Dispose();
+                    }
+                    else
+                    {
+                        userFlags = await LaunchDarklyServices.GetUserFeatureFlags(LDproject, LDenv, userkey);
+                    }
                     if (userFlags != null)
                     {
                         return req.CreateResponse(HttpStatusCode.OK, userFlags); //return the users flags
