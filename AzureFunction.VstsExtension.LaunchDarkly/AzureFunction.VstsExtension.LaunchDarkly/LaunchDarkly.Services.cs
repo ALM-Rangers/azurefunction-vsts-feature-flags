@@ -1,5 +1,6 @@
 ﻿using Microsoft.Azure.WebJobs.Host;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -51,6 +52,34 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
                 return response;
             }
 
+        }
+
+        private static async Task<HttpResponseMessage> GetUserFlags(string ldproject, string ldenv, string userkey)
+        {
+            string ldUri = string.Concat("https://app.launchdarkly.com/api/v2/users/" + ldproject + "/" + ldenv + "/" + userkey + "/flags");
+            using (HttpClient client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(Helpers.GetEnvironmentVariable("LaunchDarkly_API_Key"));
+                var response = await client.GetAsync(ldUri);
+                return response;
+            }
+
+        }
+
+        public static async Task<Dictionary<string, bool>> GetUserFeatureFlags(string LDproject, string LDenv, string userkey)
+        {
+            HttpResponseMessage getStatusResponse = await GetUserFlags(LDproject, LDenv, userkey);
+            var getflagsusers = getStatusResponse.Content.ReadAsStringAsync().Result;
+            Dictionary<string, bool> userFlags = new Dictionary<string, bool>();
+            dynamic jobj = JObject.Parse(getflagsusers);
+            foreach (JProperty prop in jobj["items"])
+            {
+                string ffname = prop.Name;
+                string ffvalue = prop.Value["_value"].ToString();
+                userFlags.Add(ffname, Convert.ToBoolean(ffvalue));
+            }
+
+            return userFlags;
         }
     }
 }
