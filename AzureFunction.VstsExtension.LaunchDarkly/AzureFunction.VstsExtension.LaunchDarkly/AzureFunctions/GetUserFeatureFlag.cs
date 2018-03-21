@@ -9,12 +9,10 @@ using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
 using System.IdentityModel.Tokens;
 using LaunchDarkly.Client;
-using Microsoft.Azure.Services.AppAuthentication;
-using Microsoft.Azure.KeyVault;
 using System.Threading.Tasks;
-using Microsoft.Azure.KeyVault.Models;
-using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using System.Collections.Generic;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace AzureFunction.VstsExtension.LaunchDarkly
 {
@@ -22,10 +20,9 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
     {
         private static string key = TelemetryConfiguration.Active.InstrumentationKey = System.Environment.GetEnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY", EnvironmentVariableTarget.Process);
         private static TelemetryClient telemetry = new TelemetryClient() { InstrumentationKey = key };
-
-
+        
         [FunctionName("GetUserFeatureFlag")]
-        public static HttpResponseMessage Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "GetUserFeatureFlag")]HttpRequestMessage req, ExecutionContext context, TraceWriter log)
+        public static async Task<HttpResponseMessage> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "GetUserFeatureFlag")]HttpRequestMessage req, ExecutionContext context, TraceWriter log)
         {
             try
             {
@@ -33,9 +30,10 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
                 telemetry.Context.Operation.Name = "GetUserFeatureFlag";
                 var startTime = DateTime.Now;
                 var timer = System.Diagnostics.Stopwatch.StartNew();
+
                 int apiversion = Helpers.GetHeaderValue(req, "api-version");
 
-                var data = req.Content.ReadAsStringAsync().Result; //Gettings parameters in Body request     
+                var data = await req.Content.ReadAsStringAsync(); //Gettings parameters in Body request     
                 var formValues = data.Split('&')
                     .Select(value => value.Split('='))
                     .ToDictionary(pair => Uri.UnescapeDataString(pair[0]).Replace("+", " "),
@@ -46,22 +44,40 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
                 #endregion
 
                 var account = formValues["account"];
-                var launchDarklySDKkey = formValues["ldkey"];
-                var appSettingExtCert = (apiversion < 2) ? formValues["appsettingextcert"] : string.Empty; //"RollUpBoard_ExtensionCertificate"
-                var ExtCertKey = (apiversion >= 2) ? formValues["extcertkey"] : string.Empty;
-                bool useKeyVault = (apiversion >= 2);
+                var appSettingExtCert = formValues["appsettingextcert"]; //"RollUpBoard_ExtensionCertificate"
+                var launchDarklySDKkey = (apiversion == 1) ?  formValues["ldkey"] : string.Empty;
+                string LDproject = (apiversion >= 2) ? formValues["ldproject"] : "roll-up-board";
+                string LDenv = (apiversion >= 2) ? formValues["ldenv"] : "production";
 
                 //get the token passed in the header request
-                string tokenuserId = Helpers.TokenIsValid(req, useKeyVault , appSettingExtCert, ExtCertKey, log);
+                string issuedToken = Helpers.GetUserTokenInRequest(req);
 
 
-                //Check the token, and compare with the VSTS UserId
+                string extcert = Helpers.GetExtCertificatEnvName(appSettingExtCert, apiversion);
+                var tokenuserId = CheckVSTSToken.checkTokenValidity(issuedToken, extcert); //Check the token, and compare with the VSTS UserId
                 if (tokenuserId != null)
                 {
-                    IDictionary<string, Newtonsoft.Json.Linq.JToken> flags = LaunchDarklyServices.GetAllUserFlags(account, launchDarklySDKkey, tokenuserId);
-                    if (flags != null)
+                    var userkey = LaunchDarklyServices.FormatUserKey(tokenuserId, account);
+                    Dictionary<string, bool> userFlags = new Dictionary<string, bool>();
+
+                    // LD SDK performance review
+                    if (apiversion == 1)
                     {
-                        return req.CreateResponse(HttpStatusCode.OK, flags); //return the users flags
+                        Configuration ldConfig = Configuration.Default(launchDarklySDKkey);
+                        LdClient ldClient = new LdClient(ldConfig);
+                        User user = User.WithKey(userkey);
+                        var flags = ldClient.AllFlags(user);
+                        userFlags.Add("enable-telemetry", ldClient.BoolVariation("enable-telemetry", user));
+                        userFlags.Add("display-logs", ldClient.BoolVariation("display-logs", user));
+                        ldClient.Dispose();
+                    }
+                    else
+                    {
+                        userFlags = await LaunchDarklyServices.GetUserFeatureFlags(LDproject, LDenv, userkey);
+                    }
+                    if (userFlags != null)
+                    {
+                        return req.CreateResponse(HttpStatusCode.OK, userFlags); //return the users flags
                     }
                     else
                     {
@@ -81,7 +97,5 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
                 return req.CreateResponse(HttpStatusCode.InternalServerError, ex);
             }
         }
-
-
     }
 }

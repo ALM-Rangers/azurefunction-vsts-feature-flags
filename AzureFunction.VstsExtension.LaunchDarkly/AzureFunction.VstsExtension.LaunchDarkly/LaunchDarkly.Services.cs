@@ -1,6 +1,6 @@
-﻿using LaunchDarkly.Client;
-using Microsoft.Azure.WebJobs.Host;
+﻿using Microsoft.Azure.WebJobs.Host;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -54,21 +54,35 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
 
         }
 
-        public static IDictionary<string, Newtonsoft.Json.Linq.JToken> GetAllUserFlags(string account, string launchDarklySDKkey, string tokenuserId)
+        private static async Task<HttpResponseMessage> GetUserFlags(string ldproject, string ldenv, string userkey)
         {
-            LdClient ldClient = new LdClient(launchDarklySDKkey);
-            User user = User.WithKey(tokenuserId + ":" + account);
-            var flags = ldClient.AllFlags(user);
-            ldClient.Dispose();
-            return flags;
+            string ldUri = string.Concat("https://app.launchdarkly.com/api/v2/users/" + ldproject + "/" + ldenv + "/" + userkey + "/flags");
+            using (HttpClient client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(Helpers.GetEnvironmentVariable("LaunchDarkly_API_Key"));
+                var response = await client.GetAsync(ldUri);
+                return response;
+            }
+
         }
 
-        public static void TrackFeatureFlag(string account, string launchDarklySDKkey, string customEvent, string tokenuserId)
+        public static async Task<Dictionary<string, bool>> GetUserFeatureFlags(string LDproject, string LDenv, string userkey)
         {
-            LdClient ldClient = new LdClient(launchDarklySDKkey);
-            User user = User.WithKey(tokenuserId + ":" + account);
-            ldClient.Track(customEvent, user, string.Empty);
-            ldClient.Flush();
+            Dictionary<string, bool> userFlags = new Dictionary<string, bool>();
+            HttpResponseMessage getResponse = await GetUserFlags(LDproject, LDenv, userkey);
+            if (getResponse.StatusCode == HttpStatusCode.OK)
+            {
+                var getflagsusers = getResponse.Content.ReadAsStringAsync().Result;
+                
+                dynamic jobj = JObject.Parse(getflagsusers);
+                foreach (JProperty prop in jobj["items"])
+                {
+                    string ffname = prop.Name;
+                    string ffvalue = prop.Value["_value"].ToString();
+                    userFlags.Add(ffname, Convert.ToBoolean(ffvalue));
+                }
+            }
+            return userFlags;
         }
     }
 }
