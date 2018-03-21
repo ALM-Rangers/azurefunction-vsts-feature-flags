@@ -1,4 +1,5 @@
-﻿using Microsoft.Azure.WebJobs.Host;
+﻿using LaunchDarkly.Client;
+using Microsoft.Azure.WebJobs.Host;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -38,12 +39,12 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
 
         public static async Task<HttpResponseMessage> UpdateUserFlag(string ldproject, string ldenv, string userkey, string feature, bool active)
         {
-            string ldUri = string.Concat("https://app.launchdarkly.com/api/v2/users/"+ ldproject + "/"+ ldenv + "/" + userkey + "/flags/" + feature);
+            string ldUri = string.Concat("https://app.launchdarkly.com/api/v2/users/" + ldproject + "/" + ldenv + "/" + userkey + "/flags/" + feature);
             Dictionary<string, bool> dic = new Dictionary<string, bool>();
             dic.Add("setting", active);
             string json = JsonConvert.SerializeObject(dic);
-            var requestData = new StringContent(json,Encoding.UTF8, "application/json");
-          
+            var requestData = new StringContent(json, Encoding.UTF8, "application/json");
+
             using (HttpClient client = new HttpClient())
             {
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(Helpers.GetEnvironmentVariable("LaunchDarkly_API_Key"));
@@ -73,7 +74,7 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
             if (getResponse.StatusCode == HttpStatusCode.OK)
             {
                 var getflagsusers = getResponse.Content.ReadAsStringAsync().Result;
-                
+
                 dynamic jobj = JObject.Parse(getflagsusers);
                 foreach (JProperty prop in jobj["items"])
                 {
@@ -83,6 +84,14 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
                 }
             }
             return userFlags;
+        }
+
+        public static void TrackFeatureFlag(string account, string launchDarklySDKkey, string customEvent, string tokenuserId)
+        {
+            LdClient ldClient = new LdClient(launchDarklySDKkey);
+            User user = User.WithKey(tokenuserId + ":" + account);
+            ldClient.Track(customEvent, user, string.Empty);
+            ldClient.Flush();
         }
     }
 }

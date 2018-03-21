@@ -120,9 +120,6 @@
         "type": "SystemAssigned"
       },
       "scale": null,
-      "identity": {
-        "type": "SystemAssigned"
-      },
       "properties": {
         "enabled": true,
         "hostNameSslStates": [
@@ -338,9 +335,6 @@
         "type": "SystemAssigned"
       },
       "scale": null,
-      "identity": {
-        "type": "SystemAssigned"
-      },
       "properties": {
         "enabled": true,
         "hostNameSslStates": [

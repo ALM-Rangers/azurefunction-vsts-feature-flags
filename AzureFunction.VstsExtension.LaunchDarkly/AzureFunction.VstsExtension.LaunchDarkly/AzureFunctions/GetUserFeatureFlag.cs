@@ -48,6 +48,8 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
                 var launchDarklySDKkey = (apiversion == 1) ?  formValues["ldkey"] : string.Empty;
                 string LDproject = (apiversion >= 2) ? formValues["ldproject"] : "roll-up-board";
                 string LDenv = (apiversion >= 2) ? formValues["ldenv"] : "production";
+                string ExtCertKey = (apiversion >= 3) ? formValues["extcertkey"] : string.Empty;
+                bool useKeyVault = (apiversion >= 3);
 
                 //get the token passed in the header request
                 string issuedToken = Helpers.GetUserTokenInRequest(req);
