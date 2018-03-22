@@ -20,7 +20,9 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
     {
         private static string key = TelemetryConfiguration.Active.InstrumentationKey = System.Environment.GetEnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY", EnvironmentVariableTarget.Process);
         private static TelemetryClient telemetry = new TelemetryClient() { InstrumentationKey = key };
-        
+        private static LdClient _ldclient = new LdClient(System.Environment.GetEnvironmentVariable("LaunchDarkly_SDK_Key", EnvironmentVariableTarget.Process));
+
+
         [FunctionName("GetUserFeatureFlag")]
         public static async Task<HttpResponseMessage> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "GetUserFeatureFlag")]HttpRequestMessage req, ExecutionContext context, TraceWriter log)
         {
@@ -45,9 +47,11 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
 
                 var account = formValues["account"];
                 var appSettingExtCert = formValues["appsettingextcert"]; //"RollUpBoard_ExtensionCertificate"
-                var launchDarklySDKkey = (apiversion == 1) ?  formValues["ldkey"] : string.Empty;
+                string launchDarklySDKkey = (apiversion == 1) ? formValues["ldkey"] : string.Empty;
                 string LDproject = (apiversion >= 2) ? formValues["ldproject"] : "roll-up-board";
                 string LDenv = (apiversion >= 2) ? formValues["ldenv"] : "production";
+
+
 
                 //get the token passed in the header request
                 string issuedToken = Helpers.GetUserTokenInRequest(req);
@@ -61,20 +65,18 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
                     Dictionary<string, bool> userFlags = new Dictionary<string, bool>();
 
                     // LD SDK performance review
-                    if (apiversion == 1)
-                    {
-                        Configuration ldConfig = Configuration.Default(launchDarklySDKkey);
-                        LdClient ldClient = new LdClient(ldConfig);
-                        User user = User.WithKey(userkey);
-                        var flags = ldClient.AllFlags(user);
-                        userFlags.Add("enable-telemetry", ldClient.BoolVariation("enable-telemetry", user));
-                        userFlags.Add("display-logs", ldClient.BoolVariation("display-logs", user));
-                        ldClient.Dispose();
-                    }
-                    else
+                    //if (apiversion == 1)
+                    //{
+                    User user = User.WithKey(userkey);
+                    var flags = _ldclient.AllFlags(user);
+                    userFlags.Add("enable-telemetry", _ldclient.BoolVariation("enable-telemetry", user));
+                    userFlags.Add("display-logs", _ldclient.BoolVariation("display-logs", user));
+                    _ldclient.Flush();
+                    //}
+                    /*else
                     {
                         userFlags = await LaunchDarklyServices.GetUserFeatureFlags(LDproject, LDenv, userkey);
-                    }
+                    }*/
                     if (userFlags != null)
                     {
                         return req.CreateResponse(HttpStatusCode.OK, userFlags); //return the users flags
