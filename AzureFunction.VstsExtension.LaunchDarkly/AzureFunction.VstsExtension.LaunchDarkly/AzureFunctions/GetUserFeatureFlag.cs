@@ -65,18 +65,18 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
                     Dictionary<string, bool> userFlags = new Dictionary<string, bool>();
 
                     // LD SDK performance review
-                    //if (apiversion == 1)
-                    //{
-                    User user = User.WithKey(userkey);
-                    var flags = _ldclient.AllFlags(user);
-                    userFlags.Add("enable-telemetry", _ldclient.BoolVariation("enable-telemetry", user));
-                    userFlags.Add("display-logs", _ldclient.BoolVariation("display-logs", user));
-                    _ldclient.Flush();
-                    //}
-                    /*else
+                    if (apiversion == 2)
+                    {
+                        User user = User.WithKey(userkey);
+                        //var flags = _ldclient.AllFlags(user);
+                        userFlags.Add("enable-telemetry", _ldclient.BoolVariation("enable-telemetry", user));
+                        userFlags.Add("display-logs", _ldclient.BoolVariation("display-logs", user));
+                        _ldclient.Flush();
+                    }
+                    else
                     {
                         userFlags = await LaunchDarklyServices.GetUserFeatureFlags(LDproject, LDenv, userkey);
-                    }*/
+                    }
                     if (userFlags != null)
                     {
                         return req.CreateResponse(HttpStatusCode.OK, userFlags); //return the users flags
