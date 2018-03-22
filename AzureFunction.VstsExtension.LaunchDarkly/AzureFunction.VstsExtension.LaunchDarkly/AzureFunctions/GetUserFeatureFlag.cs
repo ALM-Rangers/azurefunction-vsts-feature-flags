@@ -67,15 +67,11 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
                     // LD SDK performance review
                     if (apiversion == 2)
                     {
-                        User user = User.WithKey(userkey);
-                        //var flags = _ldclient.AllFlags(user);
-                        userFlags.Add("enable-telemetry", _ldclient.BoolVariation("enable-telemetry", user));
-                        userFlags.Add("display-logs", _ldclient.BoolVariation("display-logs", user));
-                        _ldclient.Flush();
+                        LaunchDarklyServices.GetUserFeatureFlags(_ldclient, userkey,ref userFlags);
                     }
                     else
                     {
-                        userFlags = await LaunchDarklyServices.GetUserFeatureFlags(LDproject, LDenv, userkey);
+                        userFlags = await LaunchDarklyServices.GetUserFeatureFlagsv1(LDproject, LDenv, userkey);
                     }
                     if (userFlags != null)
                     {

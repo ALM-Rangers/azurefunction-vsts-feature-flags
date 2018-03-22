@@ -1,4 +1,5 @@
-﻿using Microsoft.Azure.WebJobs.Host;
+﻿using LaunchDarkly.Client;
+using Microsoft.Azure.WebJobs.Host;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -38,12 +39,12 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
 
         public static async Task<HttpResponseMessage> UpdateUserFlag(string ldproject, string ldenv, string userkey, string feature, bool active)
         {
-            string ldUri = string.Concat("https://app.launchdarkly.com/api/v2/users/"+ ldproject + "/"+ ldenv + "/" + userkey + "/flags/" + feature);
+            string ldUri = string.Concat("https://app.launchdarkly.com/api/v2/users/" + ldproject + "/" + ldenv + "/" + userkey + "/flags/" + feature);
             Dictionary<string, bool> dic = new Dictionary<string, bool>();
             dic.Add("setting", active);
             string json = JsonConvert.SerializeObject(dic);
-            var requestData = new StringContent(json,Encoding.UTF8, "application/json");
-          
+            var requestData = new StringContent(json, Encoding.UTF8, "application/json");
+
             using (HttpClient client = new HttpClient())
             {
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(Helpers.GetEnvironmentVariable("LaunchDarkly_API_Key"));
@@ -66,14 +67,14 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
 
         }
 
-        public static async Task<Dictionary<string, bool>> GetUserFeatureFlags(string LDproject, string LDenv, string userkey)
+        public static async Task<Dictionary<string, bool>> GetUserFeatureFlagsv1(string LDproject, string LDenv, string userkey)
         {
             Dictionary<string, bool> userFlags = new Dictionary<string, bool>();
             HttpResponseMessage getResponse = await GetUserFlags(LDproject, LDenv, userkey);
             if (getResponse.StatusCode == HttpStatusCode.OK)
             {
                 var getflagsusers = getResponse.Content.ReadAsStringAsync().Result;
-                
+
                 dynamic jobj = JObject.Parse(getflagsusers);
                 foreach (JProperty prop in jobj["items"])
                 {
@@ -84,5 +85,17 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
             }
             return userFlags;
         }
+
+        public static Dictionary<string, bool> GetUserFeatureFlags(LdClient ldclient, string userkey,ref Dictionary<string, bool> userFlags)
+        {
+            User user = User.WithKey(userkey);
+            //var flags = _ldclient.AllFlags(user);
+            userFlags.Add("enable-telemetry", ldclient.BoolVariation("enable-telemetry", user));
+            userFlags.Add("display-logs", ldclient.BoolVariation("display-logs", user));
+            ldclient.Flush();
+            return userFlags;
+        }
     }
+
+
 }
