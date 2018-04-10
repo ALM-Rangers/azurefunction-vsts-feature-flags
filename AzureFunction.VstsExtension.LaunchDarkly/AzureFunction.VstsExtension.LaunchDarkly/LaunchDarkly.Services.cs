@@ -67,7 +67,7 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
 
         }
 
-        public static async Task<Dictionary<string, bool>> GetUserFeatureFlags(string LDproject, string LDenv, string userkey)
+        public static async Task<Dictionary<string, bool>> GetUserFeatureFlagsv1(string LDproject, string LDenv, string userkey)
         {
             Dictionary<string, bool> userFlags = new Dictionary<string, bool>();
             HttpResponseMessage getResponse = await GetUserFlags(LDproject, LDenv, userkey);
@@ -86,12 +86,16 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
             return userFlags;
         }
 
-        public static void TrackFeatureFlag(string account, string launchDarklySDKkey, string customEvent, string tokenuserId)
+        public static Dictionary<string, bool> GetUserFeatureFlags(LdClient ldclient, string userkey,ref Dictionary<string, bool> userFlags)
         {
-            LdClient ldClient = new LdClient(launchDarklySDKkey);
-            User user = User.WithKey(tokenuserId + ":" + account);
-            ldClient.Track(customEvent, user, string.Empty);
-            ldClient.Flush();
+            User user = User.WithKey(userkey);
+            //var flags = _ldclient.AllFlags(user);
+            userFlags.Add("enable-telemetry", ldclient.BoolVariation("enable-telemetry", user));
+            userFlags.Add("display-logs", ldclient.BoolVariation("display-logs", user));
+            ldclient.Flush();
+            return userFlags;
         }
     }
+
+
 }
