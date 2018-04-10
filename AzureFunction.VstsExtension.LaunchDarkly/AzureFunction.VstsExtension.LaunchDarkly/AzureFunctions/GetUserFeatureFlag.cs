@@ -28,7 +28,6 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
         {
             try
             {
-                Task<HttpResponseMessage> response = null;
 
                 telemetry.Context.Operation.Id = context.InvocationId.ToString();
                 telemetry.Context.Operation.Name = "GetUserFeatureFlag";
@@ -70,6 +69,7 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
                     if (apiversion == 2)
                     {
                         LaunchDarklyServices.GetUserFeatureFlags(_ldclient, userkey,ref userFlags);
+                        _ldclient.Flush();
                     }
                     else
                     {
@@ -77,21 +77,19 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
                     }
                     if (userFlags != null)
                     {
-                        response = req.CreateResponse(HttpStatusCode.OK, userFlags); //return the users flags
+                        return req.CreateResponse(HttpStatusCode.OK, userFlags); //return the users flags
                     }
                     else
                     {
                         telemetry.TrackTrace("flags is null");
-                        response = req.CreateResponse(HttpStatusCode.InternalServerError, "User flags is null");
+                        return req.CreateResponse(HttpStatusCode.InternalServerError, "User flags is null");
                     }
-                    _ldclient.flush();
                 }
                 else
                 {
                     telemetry.TrackTrace("The token is not valid");
-                    response = req.CreateResponse(HttpStatusCode.Unauthorized, "The token is not valid");
+                    return  req.CreateResponse(HttpStatusCode.Unauthorized, "The token is not valid");
                 }
-                return response;
             }
             catch (Exception ex)
             {
