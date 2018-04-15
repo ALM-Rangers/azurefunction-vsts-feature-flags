@@ -7,12 +7,10 @@ using System;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
-using System.IdentityModel.Tokens;
 using LaunchDarkly.Client;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+
 
 namespace AzureFunction.VstsExtension.LaunchDarkly
 {
@@ -21,7 +19,7 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
         private static string key = TelemetryConfiguration.Active.InstrumentationKey = System.Environment.GetEnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY", EnvironmentVariableTarget.Process);
         private static TelemetryClient telemetry = new TelemetryClient() { InstrumentationKey = key };
         private static LdClient _ldclient = new LdClient(System.Environment.GetEnvironmentVariable("LaunchDarkly_SDK_Key", EnvironmentVariableTarget.Process));
-
+        
 
         [FunctionName("GetUserFeatureFlag")]
         public static async Task<HttpResponseMessage> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "GetUserFeatureFlag")]HttpRequestMessage req, ExecutionContext context, TraceWriter log)
