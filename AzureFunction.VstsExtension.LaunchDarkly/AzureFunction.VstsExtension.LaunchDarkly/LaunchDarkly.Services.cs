@@ -65,7 +65,7 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
             return userFlags;
         }
 
-        public static void TrackFeatureFlag(LdClient ldclient, string userkey, string launchDarklySDKkey, string customEvent)
+        public static void TrackFeatureFlag(LdClient ldclient, string userkey, string customEvent)
         {
             User user = User.WithKey(userkey);
             ldclient.Track(customEvent, user, null);

@@ -53,7 +53,7 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
                 if (tokenuserId != null)
                 {
                     var userkey = LaunchDarklyServices.FormatUserKey(tokenuserId, account);
-                    LaunchDarklyServices.TrackFeatureFlag(_ldclient, userkey, launchDarklySDKkey, customEvent);
+                    LaunchDarklyServices.TrackFeatureFlag(_ldclient, userkey, customEvent);
                     return req.CreateResponse(HttpStatusCode.OK, "The custom event had be successfuly tracked");
                 }
                 else
