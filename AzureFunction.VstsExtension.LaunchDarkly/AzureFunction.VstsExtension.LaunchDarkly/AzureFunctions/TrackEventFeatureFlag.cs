@@ -12,11 +12,12 @@ using LaunchDarkly.Client;
 
 namespace AzureFunction.VstsExtension.LaunchDarkly
 {
-    
+
     public static class TrackEventFeatureFlag
     {
         private static string key = TelemetryConfiguration.Active.InstrumentationKey = System.Environment.GetEnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY", EnvironmentVariableTarget.Process);
         private static TelemetryClient telemetry = new TelemetryClient() { InstrumentationKey = key };
+        private static LdClient _ldclient = new LdClient(System.Environment.GetEnvironmentVariable("LaunchDarkly_SDK_Key", EnvironmentVariableTarget.Process));
 
         [FunctionName("TrackEventFeatureFlag")]
         public static HttpResponseMessage Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "TrackEventFeatureFlag")]HttpRequestMessage req, ExecutionContext context, TraceWriter log)
@@ -51,7 +52,8 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
 
                 if (tokenuserId != null)
                 {
-                    LaunchDarklyServices.TrackFeatureFlag(account, launchDarklySDKkey, customEvent, tokenuserId);
+                    var userkey = LaunchDarklyServices.FormatUserKey(tokenuserId, account);
+                    LaunchDarklyServices.TrackFeatureFlag(_ldclient, userkey, launchDarklySDKkey, customEvent);
                     return req.CreateResponse(HttpStatusCode.OK, "The custom event had be successfuly tracked");
                 }
                 else

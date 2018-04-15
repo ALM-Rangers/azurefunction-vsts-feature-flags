@@ -55,47 +55,23 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
 
         }
 
-        private static async Task<HttpResponseMessage> GetUserFlags(string ldproject, string ldenv, string userkey)
-        {
-            string ldUri = string.Concat("https://app.launchdarkly.com/api/v2/users/" + ldproject + "/" + ldenv + "/" + userkey + "/flags");
-            using (HttpClient client = new HttpClient())
-            {
-                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(Helpers.GetEnvironmentVariable("LaunchDarkly_API_Key"));
-                var response = await client.GetAsync(ldUri);
-                return response;
-            }
-
-        }
-
-        public static async Task<Dictionary<string, bool>> GetUserFeatureFlagsv1(string LDproject, string LDenv, string userkey)
-        {
-            Dictionary<string, bool> userFlags = new Dictionary<string, bool>();
-            HttpResponseMessage getResponse = await GetUserFlags(LDproject, LDenv, userkey);
-            if (getResponse.StatusCode == HttpStatusCode.OK)
-            {
-                var getflagsusers = getResponse.Content.ReadAsStringAsync().Result;
-
-                dynamic jobj = JObject.Parse(getflagsusers);
-                foreach (JProperty prop in jobj["items"])
-                {
-                    string ffname = prop.Name;
-                    string ffvalue = prop.Value["_value"].ToString();
-                    userFlags.Add(ffname, Convert.ToBoolean(ffvalue));
-                }
-            }
-            return userFlags;
-        }
-
+  
         public static Dictionary<string, bool> GetUserFeatureFlags(LdClient ldclient, string userkey,ref Dictionary<string, bool> userFlags)
         {
             User user = User.WithKey(userkey);
-            //var flags = _ldclient.AllFlags(user);
             userFlags.Add("enable-telemetry", ldclient.BoolVariation("enable-telemetry", user));
             userFlags.Add("display-logs", ldclient.BoolVariation("display-logs", user));
             ldclient.Flush();
             return userFlags;
         }
-    }
 
+        public static void TrackFeatureFlag(LdClient ldclient, string userkey, string launchDarklySDKkey, string customEvent)
+        {
+            User user = User.WithKey(userkey);
+            ldclient.Track(customEvent, user, null);
+            ldclient.Flush();
+
+        }
+    }
 
 }

@@ -8,7 +8,7 @@
     "testapi2": "newman run Azure_Func_LD.postman_collection.json -e postman_environment.json"
   },
   "devDependencies": {
-    "newman": "^3.7.6"
+    "newman": "^3.9.3"
   },
   "author": "",
   "license": "ISC"
