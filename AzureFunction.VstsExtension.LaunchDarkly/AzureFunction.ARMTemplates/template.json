@@ -116,10 +116,10 @@
       "name": "[parameters('functionApp_name')]",
       "apiVersion": "2016-08-01",
       "location": "[parameters('siteLocation')]",
-      "scale": null,
       "identity": {
         "type": "SystemAssigned"
       },
+      "scale": null,
       "properties": {
         "enabled": true,
         "hostNameSslStates": [
@@ -191,6 +191,10 @@
             {
               "name": "LaunchDarkly_API_Key",
               "value": "LaunchDarkly_API_Key"
+            },
+            {
+              "name": "KeyVaultName",
+              "value": "KeyVaultName"
             }
           ]
         },
@@ -327,10 +331,10 @@
       "name": "[parameters('slot_1_complete_name')]",
       "apiVersion": "2016-08-01",
       "location": "[parameters('siteLocation')]",
-      "scale": null,
       "identity": {
         "type": "SystemAssigned"
       },
+      "scale": null,
       "properties": {
         "enabled": true,
         "hostNameSslStates": [
@@ -402,6 +406,10 @@
             {
               "name": "LaunchDarkly_API_Key",
               "value": "LaunchDarkly_API_Key"
+            },
+            {
+              "name": "KeyVaultName",
+              "value": "KeyVaultName"
             }
           ]
         },

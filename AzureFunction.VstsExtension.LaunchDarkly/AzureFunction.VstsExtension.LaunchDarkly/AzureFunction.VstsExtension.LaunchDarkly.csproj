@@ -8,6 +8,8 @@
   <ItemGroup>    
     <PackageReference Include="LaunchDarkly.Client" Version="3.5.0" />    
     <PackageReference Include="Microsoft.ApplicationInsights" Version="2.4.0" />    
+    <PackageReference Include="Microsoft.Azure.KeyVault" Version="2.3.2" />    
+    <PackageReference Include="Microsoft.Azure.Services.AppAuthentication" Version="1.1.0-preview" />    
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.2" />    
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="4.0.4.403061554" />    
     <PackageReference Include="System.Net.Http" Version="4.3.3" />
