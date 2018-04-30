@@ -40,8 +40,7 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
                 log.Info(data); //for debug
                 #endregion
 
-                var account = formValues["account"];
-                var launchDarklySDKkey = formValues["ldkey"];
+                var account = formValues["account"];               
                 var customEvent = formValues["customevent"];
                 var appSettingExtCert = (apiversion < 2) ? formValues["appsettingextcert"] : string.Empty; //"RollUpBoard_ExtensionCertificate"
                 var ExtCertKey = (apiversion >= 2) ? formValues["extcertkey"] : string.Empty;
