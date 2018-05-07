@@ -17,7 +17,7 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
                 {
                     IssuerSigningTokens = new List<BinarySecretSecurityToken>()
                         {
-                            new BinarySecretSecurityToken (System.Text.UTF8Encoding.UTF8.GetBytes(secret))
+                            new BinarySecretSecurityToken (System.Text.UTF8Encoding.UTF8.GetBytes(secret.Trim()))
                         },
                     ValidateIssuer = false,
                     RequireSignedTokens = true,
@@ -51,7 +51,7 @@ namespace AzureFunction.VstsExtension.LaunchDarkly
                 {
                     IssuerSigningTokens = new List<BinarySecretSecurityToken>()
                         {
-                            new BinarySecretSecurityToken (System.Text.UTF8Encoding.UTF8.GetBytes(secret))
+                            new BinarySecretSecurityToken (System.Text.UTF8Encoding.UTF8.GetBytes(secret.Trim()))
                         },
                     ValidateIssuer = false,
                     RequireSignedTokens = true,
